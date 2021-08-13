@@ -17,7 +17,7 @@ import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider value={store}>
+    <Provider store={store}>
       <ErrorBoundary>
         <I18nextProvider i18n={i18n}>
           <BrowserRouter>
