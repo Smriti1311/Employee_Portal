@@ -1,11 +1,16 @@
+import { USERDETAILS } from "../../components/Contants";
+
 const initialState = {
-    employeeId : '',
-    password : ''
+    employeeData : {}
 }
 
 const LoginReducer = (state = initialState , action) => {
  switch(action.type){
-
+    case USERDETAILS : 
+        return{
+            ...state,
+            employeeData : action.employeeData
+        }
     default :
         return state;
  }

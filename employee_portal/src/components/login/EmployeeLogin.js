@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, FormControl, FormGroup, FormLabel, FormText, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { validate } from 'validate.js';
+import { submit_login } from '../../store/Actions/LoginActions';
 
 const EmployeeLogin = (props) => {
     const [employeeId, setEmployeeId] = useState('');
@@ -24,6 +25,11 @@ const EmployeeLogin = (props) => {
             }
         }
     }
+
+    useEffect(()=>{
+      let empToken =  localStorage.getItem('empToken');
+        console.log(empToken);
+    },[props.EmployeeLogin?.employeeData.Token]);
 
     const setLoginDataHandler = event => {
         if (event.target.name === 'employeeId') {
@@ -53,9 +59,10 @@ const EmployeeLogin = (props) => {
 
     const submitHandler = event => {
         event.preventDefault();
+         props.submit_login(employeeId,password);
     }
     return (
-        <Form className="w-50 mx-auto" onSubmit={submitHandler}>
+        <Form  onSubmit={submitHandler}>
             <FormGroup className="mb-3">
                 <FormLabel>Employee Id</FormLabel>
                 <FormControl type='input'
@@ -78,7 +85,7 @@ const EmployeeLogin = (props) => {
             </FormGroup>
             <Button variant='primary'
                 type='submit'
-                disabled={ (!employeeId || !password) || errorMsg.employeeId || errorMsg.password }>Login</Button>
+                disabled={(!employeeId || !password) || errorMsg.employeeId || errorMsg.password}>Login</Button>
         </Form>
     );
 }
@@ -90,8 +97,10 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-    return null
+    return {
+        submit_login: (employeeId, password) => dispatch(submit_login(employeeId, password))
+    }
 
 }
 
-export default connect(mapStateToProps)(EmployeeLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeLogin);
