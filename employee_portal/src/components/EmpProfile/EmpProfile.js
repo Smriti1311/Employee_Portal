@@ -6,6 +6,7 @@ import { useSelector, connect } from 'react-redux';
 function EmpProfile(props) {
     //const employeeData = useSelector(state => state.Login.employeeData.employeeData.data);
     //console.log(employeeData);
+    
     const authToken = localStorage.getItem('empToken');
     const employeeData = props.employeeData.employeeData.data;
     console.log(employeeData);
