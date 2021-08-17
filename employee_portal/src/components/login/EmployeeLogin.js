@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Form, FormControl, FormGroup, FormLabel, FormText, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { validate } from 'validate.js';
+import { useHistory } from 'react-router';
+
 import { submit_login } from '../../store/Actions/LoginActions';
 
 const EmployeeLogin = (props) => {
     const [employeeId, setEmployeeId] = useState('');
     const [password, setPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
+    const history = useHistory();
 
     const constraints = {
         employeeId: {
@@ -26,10 +29,10 @@ const EmployeeLogin = (props) => {
         }
     }
 
-    useEffect(()=>{
+   /* useEffect(()=>{
       let empToken =  localStorage.getItem('empToken');
         console.log(empToken);
-    },[props.EmployeeLogin?.employeeData.Token]);
+    },[props.EmployeeLogin?.employeeData.Token]); */
 
     const setLoginDataHandler = event => {
         if (event.target.name === 'employeeId') {
@@ -59,12 +62,12 @@ const EmployeeLogin = (props) => {
 
     const submitHandler = event => {
         event.preventDefault();
-         props.submit_login(employeeId,password);
+         props.submit_login(employeeId,password, history);
     }
     return (
         <Form  onSubmit={submitHandler}>
             <FormGroup className="mb-3">
-                <FormLabel>Employee Id</FormLabel>
+                <FormLabel className = 'font-weight-bold'>Employee Id</FormLabel>
                 <FormControl type='input'
                     name='employeeId'
                     value={employeeId}
@@ -74,7 +77,7 @@ const EmployeeLogin = (props) => {
                 </FormText>
             </FormGroup>
             <FormGroup className="mb-3">
-                <FormLabel>Password</FormLabel>
+                <FormLabel className = 'font-weight-bold'>Password</FormLabel>
                 <FormControl type='password'
                     name='password'
                     value={password}
@@ -84,6 +87,7 @@ const EmployeeLogin = (props) => {
                 </FormText>
             </FormGroup>
             <Button variant='primary'
+            className = 'font-weight-bold'
                 type='submit'
                 disabled={(!employeeId || !password) || errorMsg.employeeId || errorMsg.password}>Login</Button>
         </Form>
@@ -98,7 +102,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        submit_login: (employeeId, password) => dispatch(submit_login(employeeId, password))
+        submit_login: (employeeId, password, history) => dispatch(submit_login(employeeId, password, history))
     }
 
 }

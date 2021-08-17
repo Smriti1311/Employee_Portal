@@ -5,13 +5,13 @@ const initialState = {
 }
 
 const LoginReducer = (state = initialState , action) => {
- switch(action.type){
+  switch(action.type){
     case USERDETAILS : 
         return{
             ...state,
             employeeData : action.employeeData
         }
-    default :
+    default :    
         return state;
  }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 import { Provider } from 'react-redux';
 import { I18nextProvider } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
@@ -14,6 +15,20 @@ import store from './store/store';
 import i18n from './i18n/i18n';
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary';
 
+axios.interceptors.request.use(
+  config => {
+    //const { origin } = new URL(config.url);
+    //const allowedOrigins = [apiUrl];
+    const token = localStorage.getItem('empToken');
+    //if (allowedOrigins.includes(origin)) {
+      config.headers.authorization = `Bearer ${token}`;
+    //}
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
 
 ReactDOM.render(
   <React.StrictMode>

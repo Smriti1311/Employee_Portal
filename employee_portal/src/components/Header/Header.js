@@ -1,30 +1,26 @@
 import { IconButton } from '@material-ui/core';
 import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
-import { Link , Switch, Route, useRouteMatch} from 'react-router-dom';
+import { Link, Switch, Route, useRouteMatch } from 'react-router-dom';
 
-import Profile from '../Profile/Profile';
+import EmpProfile from '../EmpProfile/EmpProfile';
 import SignOut from '../signOut/SignOut';
 import './Header.scss';
 
 function Header(props) {
-    const {path} = useRouteMatch();
+    const { path } = useRouteMatch();
     console.log(path);
     return (
-        <Container fluid className = 'Header d-flex flex-row-reverse '>
-            <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-          ></IconButton>
+        <Container fluid className='Header d-flex flex-row-reverse '>
             <Navbar>
-                    <Nav.Link as = {Link}  to={`/profile`}>Profile</Nav.Link>
-                    <Nav.Link  to={`/signOut`}>SignOut</Nav.Link>
-            </Navbar>   
+                <Navbar.Brand>EMS</Navbar.Brand>
+                <Nav.Link as={Link} to={`${path}/emp-profile`}>Profile</Nav.Link>
+                <Nav.Link as={Link} to={`${path}/signOut`}>SignOut</Nav.Link>
+            </Navbar>
 
             <Switch>
-                <Route exact path = {`/profile`} component = {Profile} />
-                <Route  path = {`/signOut`} component = {SignOut} />
+                {/* <Route exact path={`${path}/emp-profile`} component={EmpProfile} /> */}
+                <Route path={`${path}/signOut`} component={SignOut} />
             </Switch>
         </Container>
     );
