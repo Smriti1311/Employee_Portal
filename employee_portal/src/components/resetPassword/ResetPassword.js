@@ -65,11 +65,11 @@ const ResetPassword = () => {
     const otpCheckHandler = (event) => {
         console.log(params);
         event.preventDefault();
-        const url = "http://localhost:8080/users/checkOtp";
+        const url = "http://localhost:8080/users/resetPassword";
         axios.post(url, { params })
             .then((res) => {
                 console.log(res);
-                let successMsg = 'OTP is correct';
+                let successMsg = 'Password reset done';
                 setSuccessMsg(successMsg);
                 setPasswordReset(true);
             })
