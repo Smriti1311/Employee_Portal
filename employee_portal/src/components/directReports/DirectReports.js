@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory, { PaginationProvider, PaginationListStandalone } from 'react-bootstrap-table2-paginator';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit';
+import LinearProgress from '@material-ui/core/LinearProgress';
 //import overlayFactory from 'react-bootstrap-table2-overlay';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -11,6 +12,7 @@ import './DirectReports.scss';
 
 function DirectReports(props) {
     const [directReports, setDirectReports] = useState([]);
+    const [loading, setLoading] = useState(false);
     const { SearchBar } = Search;
     const columns = [
         {
@@ -62,21 +64,30 @@ function DirectReports(props) {
     }
 
     useEffect(() => {
+        setLoading(true);
         const url = "http://localhost:8080/users/allemployees";
         axios.get(url)
             .then((res) => {
                 console.log(res.data.data);
                 setDirectReports(res.data.data);
+                setLoading(false);
             })
             .catch((err) => {
                 console.log(err);
+                setLoading(false);
             })
     }, [])
 
    // const CaptionElement = () => <h3 className='Caption'>Direct Reports</h3>
 
-    const contentTable = ({ paginationProps, paginationTableProps }) => (
-        <div>
+    const contentTable = ({ paginationProps, paginationTableProps }) => {
+        if(loading){
+            return ( <div>
+                <LinearProgress variant='indeterminate' value={loading} />
+                </div>)
+        }
+        else
+       return( <div>
             <ToolkitProvider
                 bootstrap4
                 keyField="employeeId"
@@ -103,7 +114,8 @@ function DirectReports(props) {
             </ToolkitProvider>
             <PaginationListStandalone {...paginationProps} />
         </div>
-    );
+       )
+    };
 
 
 

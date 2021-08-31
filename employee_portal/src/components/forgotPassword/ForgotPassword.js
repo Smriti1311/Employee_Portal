@@ -1,6 +1,7 @@
 import { TextField } from '@material-ui/core';
-import { Card, Button, Spinner } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import React, { useState } from 'react';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { validate } from 'validate.js';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
@@ -55,9 +56,8 @@ const ForgotPassword = (props) => {
 
     let clickToProceed = '';
     if (props.resetPassword.loading) {
-        clickToProceed = <div className='text-center mt-3'>
-            <Spinner animation="border">
-            </Spinner> </div>
+        clickToProceed = <div className='text-center mt-3 w-50 mx-auto'>
+           <LinearProgress /> </div>
     }
     else if (!props.resetPassword.loading && props.resetPassword.otpReceived) {
         clickToProceed = <div className='text-center mt-3'>
@@ -73,7 +73,7 @@ const ForgotPassword = (props) => {
 
     return (
         <>
-            <Card className='Card text-center'>
+            <Card className = {`Card text-center ${props.resetPassword.loading && 'disabled'}`} >
                 <Card.Header><h2>Find your account</h2></Card.Header>
                 <Card.Body>
                     <Card.Text>

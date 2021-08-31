@@ -16,12 +16,19 @@ function Sidebar(props) {
     const sideBarRef = useRef();
     const id = useSelector(state => state.Login.employeeData?.data?._id);
 
-    const collapseSideBarHandler = () => {
+    const collapseSideBarHandler = (event) => {
         setcollapseSideBar(true);
+        event.stopPropagation();
     }
 
-    const toggleSideBarHandler = () => {
+    const toggleSideBarHandler = (event) => {
         setcollapseSideBar(!collapseSideBar);
+        event.stopPropagation();
+    }
+
+    const openSideBarHandler = (event) => {
+        setcollapseSideBar(false);
+        event.stopPropagation();
     }
 
     useEffect(() => {
@@ -43,19 +50,19 @@ function Sidebar(props) {
                 <FaBars onClick={toggleSideBarHandler} />
             </SidebarHeader>
             <SidebarContent >
-                <Menu onClick = {toggleSideBarHandler} iconShape="square">
-                    <MenuItem onClick={collapseSideBarHandler} 
+                <Menu iconShape="square">
+                    <MenuItem onClick={toggleSideBarHandler} 
                                 icon={<GoDashboard />}>DashBoard</MenuItem>
-                    <MenuItem onClick={collapseSideBarHandler} 
+                    <MenuItem onClick={toggleSideBarHandler} 
                                 icon={<BsFillPersonFill />} >All Employees</MenuItem>
-                    <SubMenu title='My Data' icon={<BsFillPersonFill />}>
+                    <SubMenu onClick = {openSideBarHandler} title='My Data' icon={<BsFillPersonFill onClick = {openSideBarHandler} />}>
                         <MenuItem onClick={collapseSideBarHandler} >My Profile
                             <Link to={`${path}/emp-profile/${id}`} />
                         </MenuItem>
                         <MenuItem onClick={collapseSideBarHandler}>Time Sheet</MenuItem>
                         <MenuItem onClick={collapseSideBarHandler}>Team Members</MenuItem>
                     </SubMenu>
-                    <SubMenu title='Employment' icon={<GrUserManager />} >
+                    <SubMenu onClick = {openSideBarHandler} title='Employment' icon={<GrUserManager />} >
                         <MenuItem onClick={collapseSideBarHandler} icon={<BsFillPersonFill />}>Enroll Employee
                             <Link to={`${path}/create-employee`} />
                         </MenuItem>

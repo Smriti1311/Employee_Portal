@@ -14,6 +14,12 @@
     width: 100%;
     overflow: scroll;
     height: 50%;
+    table-layout: auto !important;
+    white-space: nowrap;
+}
+
+.react-bootstrap-table table {
+    table-layout: auto;
 }
 
 .search-label{
@@ -34,4 +40,10 @@
     background-color : #6c757d;
     width : 100px;
     color: #ffffff;
+  }
+
+  .MuiLinearProgress-root{
+      margin-top: 5px;
+      height : 15px;
+      border-radius: 5px;
   }

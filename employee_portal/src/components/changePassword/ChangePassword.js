@@ -1,5 +1,5 @@
-import { TextField } from '@material-ui/core';
-import { Card, Button, Spinner } from 'react-bootstrap';
+import { TextField, LinearProgress } from '@material-ui/core';
+import { Card, Button } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { validate } from 'validate.js';
 import { connect } from 'react-redux';
@@ -12,18 +12,18 @@ const ChangePassword = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
-    const [ email, setEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [oldPassword, setOldPassword] = useState('');
     const [employeeId, setEmployeeId] = useState('');
 
-    useEffect(()=>{
-        if(props.EmployeeData.employeeData.data){
-        setEmail(props.EmployeeData.employeeData.data.personalEmail);
+    useEffect(() => {
+        if (props.EmployeeData.employeeData.data) {
+            setEmail(props.EmployeeData.employeeData.data.personalEmail);
             setOldPassword(props.EmployeeData.employeeData.data.password);
             setEmployeeId(props.EmployeeData.employeeData.data.employeeId);
         }
-    },[props.EmployeeData])
-  
+    }, [props.EmployeeData])
+
     const history = useHistory();
     const constraints = {
         password: {
@@ -69,7 +69,7 @@ const ChangePassword = (props) => {
 
     const passwordUpdateHandler = (event) => {
         event.preventDefault();
-        props.ChangePassword(email,oldPassword, password, confirmPassword, employeeId, history)
+        props.ChangePassword(email, oldPassword, password, confirmPassword, employeeId, history)
     }
 
     const afterResetHandler = () => {
@@ -78,7 +78,7 @@ const ChangePassword = (props) => {
 
     return (
         <div>
-            <Card className='Card text-center'>
+            <Card className={`Card text-center ${props.resetPassword.loading && 'disabled'}`}>
                 <Card.Header><h2>Change Password</h2></Card.Header>
                 <Card.Body>
                     <Card.Text>
@@ -107,7 +107,8 @@ const ChangePassword = (props) => {
                 </Card.Body>
             </Card>
             <div className='text-center mt-3'>
-                {props.ResetPassword.loading ? <Spinner animation="border"></Spinner> :
+                {props.ResetPassword.loading ? <div className='text-center mt-3 w-50 mx-auto'>
+                    <LinearProgress /> </div> :
                     props.ResetPassword.passwordChanged ?
                         <> <h2 > {props.ResetPassword.successMsg} </h2>
                             <Button
@@ -129,7 +130,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return ({
-        ChangePassword: ((email,oldPassword, password, confirmPassword, employeeId) => dispatch(changePassword(email,oldPassword, password, confirmPassword, employeeId)))
+        ChangePassword: ((email, oldPassword, password, confirmPassword, employeeId) => dispatch(changePassword(email, oldPassword, password, confirmPassword, employeeId)))
     })
 }
 

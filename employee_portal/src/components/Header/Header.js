@@ -12,7 +12,7 @@ function Header(props) {
     console.log('id=',id);
     console.log(path);
     return (
-        <Container fluid className='Header d-flex flex-reverse-row '>
+        <Container fluid className='Header flex-reverse-row '>
             <Navbar className = 'navbar-fixed-top'>
                 <Navbar.Brand className = 'mr-auto p-2'><img height = '3%' width = '5%' src = './media/EMS_LoginPage.png' alt = 'EMS' /></Navbar.Brand>
                 <Nav.Link className = 'p-2' as={Link} to={`${path}/emp-profile/${id}`}>Profile</Nav.Link>
