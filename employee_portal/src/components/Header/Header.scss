@@ -1,7 +1,14 @@
 .Header {
     background-color: rgb(194, 132, 71);
+    position: fixed;
+    z-index: 2 !important;
+    height: 64px;
 }
 
 .nav-link {
     color : black;
+}
+
+.navbar-fixed-top{
+    position: sticky;
 }

@@ -1,7 +1,8 @@
-import { USERDETAILS } from "../../components/Contants";
+import { USERDETAILS, LOGINFAILED } from "../../components/Contants";
 
 const initialState = {
-    employeeData : {}
+    employeeData : {},
+    error : ''
 }
 
 const LoginReducer = (state = initialState , action) => {
@@ -9,8 +10,14 @@ const LoginReducer = (state = initialState , action) => {
     case USERDETAILS : 
         return{
             ...state,
-            employeeData : action.employeeData
+            employeeData : action.employeeData,
+            error : ''
         }
+    case LOGINFAILED :
+        return{
+            ...state,
+            error : action.error
+        }    
     default :    
         return state;
  }

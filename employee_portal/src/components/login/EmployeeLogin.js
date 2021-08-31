@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Form, FormControl, FormGroup, FormLabel, FormText, Button } from 'react-bootstrap';
+import React, {  useState } from 'react';
+import { Form, FormControl, FormGroup, FormLabel, FormText, Button, Nav } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { validate } from 'validate.js';
-import { useHistory } from 'react-router';
+import { useHistory, Link } from 'react-router-dom';
 
 import { submit_login } from '../../store/Actions/LoginActions';
+import './EmployeeLogin.scss';
 
 const EmployeeLogin = (props) => {
-    const [employeeId, setEmployeeId] = useState('');
+    const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
     const history = useHistory();
 
     const constraints = {
-        employeeId: {
+        userName: {
             presence: true,
             length: {
                 minimum: 4,
@@ -29,14 +30,9 @@ const EmployeeLogin = (props) => {
         }
     }
 
-   /* useEffect(()=>{
-      let empToken =  localStorage.getItem('empToken');
-        console.log(empToken);
-    },[props.EmployeeLogin?.employeeData.Token]); */
-
     const setLoginDataHandler = event => {
-        if (event.target.name === 'employeeId') {
-            setEmployeeId(event.target.value);
+        if (event.target.name === 'userName') {
+            setUserName(event.target.value);
         }
         if (event.target.name === 'password') {
             setPassword(event.target.value);
@@ -62,18 +58,19 @@ const EmployeeLogin = (props) => {
 
     const submitHandler = event => {
         event.preventDefault();
-         props.submit_login(employeeId,password, history);
+         props.submit_login(userName,password, history);
     }
     return (
+        <>
         <Form  onSubmit={submitHandler}>
             <FormGroup className="mb-3">
-                <FormLabel className = 'font-weight-bold'>Employee Id</FormLabel>
+                <FormLabel className = 'font-weight-bold'>User Name</FormLabel>
                 <FormControl type='input'
-                    name='employeeId'
-                    value={employeeId}
+                    name='userName'
+                    value={userName}
                     onChange={setLoginDataHandler} />
                 <FormText className='text-danger'>
-                    {errorMsg.employeeId && errorMsg.employeeId}
+                    {errorMsg.userName && errorMsg.userName}
                 </FormText>
             </FormGroup>
             <FormGroup className="mb-3">
@@ -89,8 +86,17 @@ const EmployeeLogin = (props) => {
             <Button variant='primary'
             className = 'font-weight-bold'
                 type='submit'
-                disabled={(!employeeId || !password) || errorMsg.employeeId || errorMsg.password}>Login</Button>
+                disabled={(!userName || !password) || errorMsg.userName || errorMsg.password}>Login</Button>
         </Form>
+        <div className = 'text-danger'>
+            {props.employeeLogin.error && props.employeeLogin.error}
+        </div>
+        <Nav>
+            <Nav.Item>
+                <Nav.Link as = {Link} to ='/forgotPassword'>Forgot Password?</Nav.Link>
+            </Nav.Item>
+        </Nav>
+        </>
     );
 }
 
@@ -102,7 +108,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        submit_login: (employeeId, password, history) => dispatch(submit_login(employeeId, password, history))
+        submit_login: (userName, password, history) => dispatch(submit_login(userName, password, history))
     }
 
 }

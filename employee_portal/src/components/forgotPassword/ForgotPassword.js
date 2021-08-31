@@ -1,17 +1,17 @@
 import { TextField } from '@material-ui/core';
-import { Card, Button } from 'react-bootstrap';
-import axios from 'axios';
+import { Card, Button, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { validate } from 'validate.js';
-import './ForgotPassword.scss';
 import { useHistory } from 'react-router';
+import { connect } from 'react-redux';
 
-const ForgotPassword = () => {
+import { generateOTP } from '../../store/Actions/ResetPasswordActions';
+import './ForgotPassword.scss';
+
+const ForgotPassword = (props) => {
 
     const [email, setEmail] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
-    const [successMsg, setSuccessMsg] = useState('');
-    const [otpReceived, setOtpReceived] = useState(false);
     const history = useHistory();
     const pathName = history.location.pathname;
     const constraints = {
@@ -46,24 +46,29 @@ const ForgotPassword = () => {
 
     const otpGenerationHandler = (event) => {
         event.preventDefault();
-        const url = "http://localhost:8080/users/otpgeneration";
-        axios.post(url, { 'email': email })
-            .then((res) => {
-                console.log(res);
-                let successMsg = 'OTP sent to email';
-                setSuccessMsg(successMsg);
-                setOtpReceived(true);
-            })
-            .catch((err) => {
-                console.log(err);
-                let errorMsg = 'Unable to generate OTP'
-                setErrorMsg(errorMsg);
-                setOtpReceived(false);
-            })
+        props.generateOTP(email);
     }
 
     const otpPageHandler = () => {
-        history.push(`${pathName}/checkOtp/${email}`)
+        history.push(`${pathName}/checkOtp`)
+    }
+
+    let clickToProceed = '';
+    if (props.resetPassword.loading) {
+        clickToProceed = <div className='text-center mt-3'>
+            <Spinner animation="border">
+            </Spinner> </div>
+    }
+    else if (!props.resetPassword.loading && props.resetPassword.otpReceived) {
+        clickToProceed = <div className='text-center mt-3'>
+            <h2 > {props.resetPassword.successMsg} </h2>
+            <Button
+                onClick={otpPageHandler}
+                disabled={!props.resetPassword.otpReceived}>Click to proceed</Button>
+        </div>
+    }
+    else {
+        clickToProceed = <div> {props.resetPassword.errorMsg} </div>
     }
 
     return (
@@ -72,11 +77,11 @@ const ForgotPassword = () => {
                 <Card.Header><h2>Find your account</h2></Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        <TextField id="outlined-basic" label="Email" variant="outlined"
+                        <TextField id="email" label="Email" variant="outlined"
                             value={email}
                             name='email'
                             onChange={handleChange}
-                            helperText={errorMsg.email ? <small className = 'text-danger'>{errorMsg.email}</small> : null} />
+                            helperText={errorMsg.email ? <small className='text-danger'>{errorMsg.email}</small> : null} />
                     </Card.Text>
                     <Button variant='primary' type='submit'
                         onClick={otpGenerationHandler}
@@ -84,18 +89,21 @@ const ForgotPassword = () => {
                         Submit</Button>
                 </Card.Body>
             </Card>
-            <div>
-                {otpReceived ? 
-                    <div className='text-center mt-3'>
-                    <h2 > {successMsg} </h2>
-                    <Button
-                        onClick = {otpPageHandler} 
-                        disabled = {!otpReceived}>Click to proceed</Button>
-                    </div>
-                    : errorMsg}
-            </div>
+            {clickToProceed}
         </>
     );
 }
 
-export default ForgotPassword;
+const mapStateToProps = state => {
+    return {
+        resetPassword : state.ResetPassword
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        generateOTP : ((email) => dispatch(generateOTP(email)) )
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPassword);

@@ -1,29 +1,25 @@
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
-import { useSelector, connect } from 'react-redux';
+import { useParams } from 'react-router';
 
 function EmpProfile(props) {
-    //const employeeData = useSelector(state => state.Login.employeeData.employeeData.data);
-    //console.log(employeeData);
-    
-    const authToken = localStorage.getItem('empToken');
-    const employeeData = props.employeeData.employeeData.data;
-    console.log(employeeData);
-    const {employeeId, employeeName, Designation, employeeType, personalEmail, reportingTo, role, status} = employeeData;
-    console.log(employeeId);
-
+    const [employeeData, setEmployeeData] = useState({});
+    const params = useParams();
+    console.log(params);
+  
     useEffect(()=>{
-        const url = "http://localhost:8080/users/empdetails/6110dba4ddc8dd7b9002bd79";
-        axios.get(url)
+    
+       const id = params['id'];
+        axios.get(`http://localhost:8080/users/empdetails/${id}`)
         .then(res => {
-            console.log(res);
+            console.log(res.data.data);
+            setEmployeeData(res.data.data);
         })
         .catch ( err => {
             console.log(err);
         })
-    },[]); 
-
+    },[params]); 
 
     return (
         <>
@@ -32,31 +28,31 @@ function EmpProfile(props) {
            <tbody>
                <tr>
                    <td>Employee Name</td>
-                    <td>{employeeName}</td>
+                    <td className = 'text-capitalize'>{employeeData.employeeName}</td>
                </tr>
                <tr>
                    <td>Designation</td>
-                    <td>{Designation}</td>
+                    <td>{employeeData.designation}</td>
                </tr>
                <tr>
                    <td>Employee Type</td>
-                    <td>{employeeType}</td>
+                    <td>{employeeData.employeeType}</td>
                </tr>
                <tr>
                    <td>Personal Email</td>
-                    <td>{personalEmail}</td>
+                    <td>{employeeData.personalEmail}</td>
                </tr>
                <tr>
                    <td>Reporting To</td>
-                    <td>{reportingTo}</td>
+                    <td>{employeeData.reportingTo}</td>
                </tr>
                <tr>
-                   <td>role</td>
-                    <td>{role}</td>
+                   <td>Role</td>
+                    <td>{employeeData.role}</td>
                </tr>
                <tr>
-                   <td>status</td>
-                    <td>{status.xy.xyz}</td>
+                   <td>Status</td>
+                    <td>{employeeData.status}</td>
                </tr>
 
                
@@ -66,8 +62,4 @@ function EmpProfile(props) {
     );
 }
 
-const mapStateToProps = state => {
-   return { employeeData : state.Login}
-}
-
-export default connect(mapStateToProps)(EmpProfile);
+export default EmpProfile;

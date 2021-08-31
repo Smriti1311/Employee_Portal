@@ -1,28 +1,24 @@
 import { TextField } from '@material-ui/core';
-import { Card, Button } from 'react-bootstrap';
-import axios from 'axios';
+import { Card, Button, Spinner } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { validate } from 'validate.js';
-import './CheckOtp.scss';
-import { useHistory, useParams } from 'react-router';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router';
 
-const CheckOtp = () => {
+import './CheckOtp.scss';
+import { checkOTP } from '../../store/Actions/ResetPasswordActions';
+
+const CheckOtp = (props) => {
 
     const [otp, setOTP] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
-    const [successMsg, setSuccessMsg] = useState('');
-    const [otpVerified, setOtpVerified] = useState(false);
     const history = useHistory();
-    const params = useParams();
-    const email = params.email;
-    params['otp'] = otp;
-    console.log(params);
-    //const pathName = history.location.pathname;
+
     const constraints = {
         otp: {
             presence: true,
-            length : {
-                is : 6
+            length: {
+                is: 6
             },
             numericality: {
                 onlyInteger: true
@@ -52,26 +48,32 @@ const CheckOtp = () => {
     }
 
     const otpCheckHandler = (event) => {
-        console.log(params);
         event.preventDefault();
-        const url = "http://localhost:8080/users/checkOtp";
-        axios.post(url, { params })
-            .then((res) => {
-                console.log(res);
-                let successMsg = 'OTP is correct';
-                setSuccessMsg(successMsg);
-                setOtpVerified(true);
-            })
-            .catch((err) => {
-                console.log(err);
-                let errorMsg = 'Incorrect OTP'
-                setErrorMsg(errorMsg);
-                setOtpVerified(false);
-            })
+        props.CheckOtp(props.resetPassword.email,otp)
     }
 
     const otpPageHandler = () => {
-        history.push(`/resetPassword/${email}`)
+        history.push(`/resetPassword`)
+    }
+
+    let clickToProceed = '';
+    if (props.resetPassword.loading) {
+        clickToProceed = <div className='text-center mt-3'>
+            <Spinner animation="border">
+            </Spinner> </div>
+    }
+    else if (!props.resetPassword.loading && props.resetPassword.otpVerified) {
+        clickToProceed = <div className='text-center mt-3'>
+            <h2 > {props.resetPassword.successMsg} </h2>
+            <Button
+                onClick={otpPageHandler}
+                disabled={!props.resetPassword.otpVerified}>Click to proceed</Button>
+        </div>
+    }
+    else {
+        clickToProceed = <div className='text-center mt-3'>
+            <h2 className='text-danger'> {props.resetPassword.errorMsg} </h2>
+        </div>
     }
 
     return (
@@ -80,12 +82,12 @@ const CheckOtp = () => {
                 <Card.Header><h2>Enter OTP</h2></Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        <TextField id="outlined-basic" label="OTP" variant="outlined"
+                        <TextField id="otp" label="OTP" variant="outlined"
                             value={otp}
                             name='otp'
-                            type = 'password'
+                            type='password'
                             onChange={handleChange}
-                            helperText={errorMsg.otp ? <small className = 'text-danger'>{errorMsg.otp}</small> : null} />
+                            helperText={errorMsg.otp ? <small className='text-danger'>{errorMsg.otp}</small> : null} />
                     </Card.Text>
                     <Button variant='primary' type='submit'
                         onClick={otpCheckHandler}
@@ -93,18 +95,21 @@ const CheckOtp = () => {
                         Submit</Button>
                 </Card.Body>
             </Card>
-            <div>
-                {otpVerified ? 
-                    <div className='text-center mt-3'>
-                    <h2 > {successMsg} </h2>
-                    <Button
-                        onClick = {otpPageHandler} 
-                        disabled = {!otpVerified}>Click to proceed</Button>
-                    </div>
-                    : errorMsg}
-            </div>
+            {clickToProceed}
         </>
     );
 }
 
-export default CheckOtp;
+const mapStateToProps = state => {
+    return ({
+        resetPassword: state.ResetPassword
+    })
+}
+
+const mapDispatchToProps = dispatch => {
+    return ({
+        CheckOtp : ((email,otp)=>{dispatch(checkOTP(email,otp))}) 
+    })
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CheckOtp);

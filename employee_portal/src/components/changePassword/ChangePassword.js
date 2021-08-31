@@ -1,20 +1,31 @@
 import { TextField } from '@material-ui/core';
 import { Card, Button, Spinner } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { validate } from 'validate.js';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 
-import './ResetPassword.scss';
-import { resetPassword } from '../../store/Actions/ResetPasswordActions';
+import './ChangePassword.scss';
+import { changePassword } from '../../store/Actions/ResetPasswordActions';
 
-const ResetPassword = (props) => {
-
+const ChangePassword = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
+    const [ email, setEmail] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
+    const [employeeId, setEmployeeId] = useState('');
+
+    useEffect(()=>{
+        if(props.EmployeeData.employeeData.data){
+        setEmail(props.EmployeeData.employeeData.data.personalEmail);
+            setOldPassword(props.EmployeeData.employeeData.data.password);
+            setEmployeeId(props.EmployeeData.employeeData.data.employeeId);
+        }
+    },[props.EmployeeData])
+  
     const history = useHistory();
-      const constraints = {
+    const constraints = {
         password: {
             presence: true,
             length: {
@@ -58,29 +69,34 @@ const ResetPassword = (props) => {
 
     const passwordUpdateHandler = (event) => {
         event.preventDefault();
-        props.ResetPasswordMethod(props.ResetPassword.email,password,confirmPassword)
-          }
+        props.ChangePassword(email,oldPassword, password, confirmPassword, employeeId, history)
+    }
 
     const afterResetHandler = () => {
         history.push('/');
     }
 
     return (
-        <>
+        <div>
             <Card className='Card text-center'>
-                <Card.Header><h2>Reset Password</h2></Card.Header>
+                <Card.Header><h2>Change Password</h2></Card.Header>
                 <Card.Body>
                     <Card.Text>
+                        <TextField id="email" label="Email" variant="outlined"
+                            value={email}
+                            name='email'
+                            type='input'
+                            disabled />
                         <TextField id="password" label="Password" variant="outlined"
                             value={password}
                             name='password'
-                            type = 'password'
+                            type='password'
                             onChange={handleChange}
                             helperText={errorMsg.password ? <small className='text-danger'>{errorMsg.password}</small> : null} />
                         <TextField id="confirmPassword" label="Confirm Password" variant="outlined"
                             value={confirmPassword}
                             name='confirmPassword'
-                            type = 'password'
+                            type='password'
                             onChange={handleChange}
                             helperText={errorMsg.confirmPassword ? <small className='text-danger'>{errorMsg.confirmPassword}</small> : null} />
                     </Card.Text>
@@ -92,27 +108,29 @@ const ResetPassword = (props) => {
             </Card>
             <div className='text-center mt-3'>
                 {props.ResetPassword.loading ? <Spinner animation="border"></Spinner> :
-                    props.ResetPassword.passwordReset ?
-                       <> <h2 > {props.ResetPassword.successMsg} </h2>
+                    props.ResetPassword.passwordChanged ?
+                        <> <h2 > {props.ResetPassword.successMsg} </h2>
                             <Button
                                 onClick={afterResetHandler}
-                                disabled={!props.ResetPassword.passwordReset}>Click to proceed</Button></>
+                                disabled={!props.ResetPassword.passwordChanged}>Click to proceed</Button></>
                         : <div className='text-danger'>{props.ResetPassword.errorMsg}</div>}
             </div>
-        </>
+        </div>
     );
 }
 
 const mapStateToProps = state => {
+    console.log(state);
     return ({
-        ResetPassword : state.ResetPassword
+        ResetPassword: state.ResetPassword,
+        EmployeeData: state.Login
     })
 }
 
 const mapDispatchToProps = dispatch => {
-    return({
-        ResetPasswordMethod : ((email,password,confirmPassword)=>dispatch(resetPassword(email,password,confirmPassword)))
+    return ({
+        ChangePassword: ((email,oldPassword, password, confirmPassword, employeeId) => dispatch(changePassword(email,oldPassword, password, confirmPassword, employeeId)))
     })
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ResetPassword);
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);

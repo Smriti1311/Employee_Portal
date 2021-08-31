@@ -19,11 +19,12 @@ class ErrorBoundary extends Component {
     }
 
     render() {
-        const { hasError, error, errorInfo } = this.state;
+        const { hasError,  errorInfo } = this.state;
+        console.log(this.state);
         if (hasError) {
             return <Fragment>
                 <h1>Something went wrong</h1>
-                <p>{error - errorInfo.componentStack}</p>
+                <p> {errorInfo.componentStack}</p>
             </Fragment>
         }
         else {

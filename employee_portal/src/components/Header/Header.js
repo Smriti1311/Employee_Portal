@@ -1,27 +1,23 @@
-import { IconButton } from '@material-ui/core';
+//import { IconButton } from '@material-ui/core';
 import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
-import { Link, Switch, Route, useRouteMatch } from 'react-router-dom';
+import {Link, useRouteMatch} from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-import EmpProfile from '../EmpProfile/EmpProfile';
-import SignOut from '../signOut/SignOut';
 import './Header.scss';
 
 function Header(props) {
     const { path } = useRouteMatch();
+    const id = useSelector(state => state.Login.employeeData.data?._id);
+    console.log('id=',id);
     console.log(path);
     return (
-        <Container fluid className='Header d-flex flex-row-reverse '>
-            <Navbar>
-                <Navbar.Brand>EMS</Navbar.Brand>
-                <Nav.Link as={Link} to={`${path}/emp-profile`}>Profile</Nav.Link>
-                <Nav.Link as={Link} to={`${path}/signOut`}>SignOut</Nav.Link>
+        <Container fluid className='Header d-flex flex-reverse-row '>
+            <Navbar className = 'navbar-fixed-top'>
+                <Navbar.Brand className = 'mr-auto p-2'><img height = '3%' width = '5%' src = './media/EMS_LoginPage.png' alt = 'EMS' /></Navbar.Brand>
+                <Nav.Link className = 'p-2' as={Link} to={`${path}/emp-profile/${id}`}>Profile</Nav.Link>
+                <Nav.Link className = 'p-2' as={Link} to={'/'}>SignOut</Nav.Link>
             </Navbar>
-
-            <Switch>
-                {/* <Route exact path={`${path}/emp-profile`} component={EmpProfile} /> */}
-                <Route path={`${path}/signOut`} component={SignOut} />
-            </Switch>
         </Container>
     );
 }
