@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { validate } from 'validate.js';
 import { useHistory, Link } from 'react-router-dom';
 
-import { submit_login } from '../../store/Actions/LoginActions';
+import { submit_login } from '../../../store/Actions/LoginActions';
 import './EmployeeLogin.scss';
+import { ToastContainer } from 'react-toastify';
 
 const EmployeeLogin = (props) => {
     const [userName, setUserName] = useState('');
@@ -88,9 +89,7 @@ const EmployeeLogin = (props) => {
                 type='submit'
                 disabled={(!userName || !password) || errorMsg.userName || errorMsg.password}>Login</Button>
         </Form>
-        <div className = 'text-danger'>
-            {props.employeeLogin.error && props.employeeLogin.error}
-        </div>
+       <ToastContainer />
         <Nav>
             <Nav.Item>
                 <Nav.Link as = {Link} to ='/forgotPassword'>Forgot Password?</Nav.Link>

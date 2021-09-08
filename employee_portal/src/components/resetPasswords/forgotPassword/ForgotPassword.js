@@ -5,12 +5,14 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { validate } from 'validate.js';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { generateOTP } from '../../store/Actions/ResetPasswordActions';
+import { generateOTP } from '../../../store/Actions/ResetPasswordActions';
 import './ForgotPassword.scss';
 
 const ForgotPassword = (props) => {
-
+console.log('forgot password');
     const [email, setEmail] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
     const history = useHistory();
@@ -47,33 +49,16 @@ const ForgotPassword = (props) => {
 
     const otpGenerationHandler = (event) => {
         event.preventDefault();
-        props.generateOTP(email);
+        props.generateOTP(email, history, pathName);
     }
 
     const otpPageHandler = () => {
         history.push(`${pathName}/checkOtp`)
     }
 
-    let clickToProceed = '';
-    if (props.resetPassword.loading) {
-        clickToProceed = <div className='text-center mt-3 w-50 mx-auto'>
-           <LinearProgress /> </div>
-    }
-    else if (!props.resetPassword.loading && props.resetPassword.otpReceived) {
-        clickToProceed = <div className='text-center mt-3'>
-            <h2 > {props.resetPassword.successMsg} </h2>
-            <Button
-                onClick={otpPageHandler}
-                disabled={!props.resetPassword.otpReceived}>Click to proceed</Button>
-        </div>
-    }
-    else {
-        clickToProceed = <div> {props.resetPassword.errorMsg} </div>
-    }
-
     return (
         <>
-            <Card className = {`Card text-center ${props.resetPassword.loading && 'disabled'}`} >
+            <Card className = {`Card text-center ${props.resetPassword?.loading && 'disabled'}`} >
                 <Card.Header><h2>Find your account</h2></Card.Header>
                 <Card.Body>
                     <Card.Text>
@@ -87,9 +72,9 @@ const ForgotPassword = (props) => {
                         onClick={otpGenerationHandler}
                         disabled={(!email || errorMsg.email)}>
                         Submit</Button>
+                        <ToastContainer />
                 </Card.Body>
             </Card>
-            {clickToProceed}
         </>
     );
 }
@@ -102,7 +87,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        generateOTP : ((email) => dispatch(generateOTP(email)) )
+        generateOTP : ((email, history, pathName) => dispatch(generateOTP(email, history, pathName)) )
     }
 }
 

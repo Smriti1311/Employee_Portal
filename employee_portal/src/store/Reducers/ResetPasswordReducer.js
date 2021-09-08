@@ -8,7 +8,6 @@ const initialState = {
     errorMsg: '',
     successMsg: '',
     otpReceived: false,
-    loading: false,
     otpVerified: false,
     passwordReset: false,
     passwordChanged : false
@@ -19,18 +18,17 @@ const ResetPasswordReducer = (state = initialState, action) => {
         case OTPGENERATIONSTARTED:
             return ({
                 ...state,
-                loading: true,
                 errorMsg: '',
                 successMsg: ''
             })
         case OTPGENERATION:
+            console.log('otp generate reducer');
             return ({
                 ...state,
                 email: action.email,
                 successMsg: action.successMsg,
                 errorMsg: '',
                 otpReceived: true,
-                loading: false
             })
         case ERRORGENERATED:
             return ({
@@ -38,34 +36,31 @@ const ResetPasswordReducer = (state = initialState, action) => {
                 errorMsg: action.errorMsg,
                 successMsg: '',
                 otpReceived: false,
-                loading: false
             })
         case CHECKOTPSTARTED:
             return ({
                 ...state,
-                loading: true,
                 errorMsg: '',
                 successMsg: ''
             })
         case CHECKOTP:
+            console.log('Reducer Check OTP');
             return ({
                 ...state,
                 successMsg: action.successMsg,
                 errorMsg: '',
                 otpVerified: true,
-                loading: false
-            })
+             })
         case CHECKOTPERROR:
+            console.log('Reducer Error OTP');
             return ({
                 ...state,
                 errorMsg: action.errorMsg,
                 otpVerified: false,
-                loading: false
             })
         case RESETPASSWORDSTARTED:
             return ({
                 ...state,
-                loading: true,
                 errorMsg: '',
                 successMsg: ''
             })
@@ -75,19 +70,16 @@ const ResetPasswordReducer = (state = initialState, action) => {
                 successMsg: action.successMsg,
                 errorMsg: '',
                 passwordReset: true,
-                loading: false
             })
         case RESETPASSWORDERROR:
             return ({
                 ...state,
                 errorMsg: action.errorMsg,
                 passwordReset: false,
-                loading: false
             })
             case CHANGEPASSWORDSTARTED:
                 return ({
                     ...state,
-                    loading: true,
                     errorMsg: '',
                     successMsg: ''
                 })
@@ -97,14 +89,12 @@ const ResetPasswordReducer = (state = initialState, action) => {
                     successMsg: action.successMsg,
                     errorMsg: '',
                     passwordChanged : true,
-                    loading: false
                 })
             case CHANGEPASSWORDERROR:
                 return ({
                     ...state,
                     errorMsg: action.errorMsg,
                     passwordChanged : false,
-                    loading: false
                 })
         default:
             return state;

@@ -2,38 +2,37 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { useParams } from 'react-router';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { useDispatch, useSelector} from 'react-redux';
+import { LOADING_DATA, LOADING_DONE } from 'components/Contants';
 
 function EmpProfile(props) {
+    console.log('emp profile');
     const [employeeData, setEmployeeData] = useState({});
-    const [loading, setLoading] = useState(false);
     const params = useParams();
-    console.log(params);
+    const dispatch = useDispatch();
+    const loading = useSelector(state => state.Loading.loading);
+    console.log(loading);
   
     useEffect(()=>{
-        setLoading(true);
+        console.log('emp profile use effect');
+        dispatch({ type : LOADING_DATA});
+        console.log(loading);
        const id = params['id'];
         axios.get(`http://localhost:8080/users/empdetails/${id}`)
         .then(res => {
-            console.log(res.data.data);
+            console.log(res);
             setEmployeeData(res.data.data);
-            setLoading(false);
+            dispatch({ type : LOADING_DONE});
         })
         .catch ( err => {
             console.log(err);
-            setLoading(false);
+            dispatch({ type : LOADING_DONE});
         })
-    },[params]); 
+    },[]); 
 
     return (
         <>
-        { loading ? 
-            <div>
-                <LinearProgress variant='indeterminate' value={loading} />
-                </div>
-        :
-        <>
-        <h2 className = 'text-center'> Employee Profile</h2>
+         <h2 className = 'text-center'> Employee Profile</h2>
        <Table bordered className = 'w-50 mx-auto'>
            <tbody>
                <tr>
@@ -63,14 +62,10 @@ function EmpProfile(props) {
                <tr>
                    <td>Status</td>
                     <td>{employeeData?.status}</td>
-               </tr>
-
-               
+               </tr>     
            </tbody>
        </Table>
        </>
-        }
-        </>
     );
 }
 

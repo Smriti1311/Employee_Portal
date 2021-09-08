@@ -1,29 +1,19 @@
 import { TextField, LinearProgress } from '@material-ui/core';
 import { Card, Button } from 'react-bootstrap';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { validate } from 'validate.js';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 
-import './ChangePassword.scss';
-import { changePassword } from '../../store/Actions/ResetPasswordActions';
+import './ResetPassword.scss';
+import { resetPassword } from '../../../store/Actions/ResetPasswordActions';
+import { ToastContainer } from 'react-toastify';
 
-const ChangePassword = (props) => {
+const ResetPassword = (props) => {
+
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
-    const [email, setEmail] = useState('');
-    const [oldPassword, setOldPassword] = useState('');
-    const [employeeId, setEmployeeId] = useState('');
-
-    useEffect(() => {
-        if (props.EmployeeData.employeeData.data) {
-            setEmail(props.EmployeeData.employeeData.data.personalEmail);
-            setOldPassword(props.EmployeeData.employeeData.data.password);
-            setEmployeeId(props.EmployeeData.employeeData.data.employeeId);
-        }
-    }, [props.EmployeeData])
-
     const history = useHistory();
     const constraints = {
         password: {
@@ -69,7 +59,7 @@ const ChangePassword = (props) => {
 
     const passwordUpdateHandler = (event) => {
         event.preventDefault();
-        props.ChangePassword(email, oldPassword, password, confirmPassword, employeeId, history)
+        props.ResetPasswordMethod(props.ResetPassword.email, password, confirmPassword, history)
     }
 
     const afterResetHandler = () => {
@@ -77,16 +67,11 @@ const ChangePassword = (props) => {
     }
 
     return (
-        <div>
-            <Card className={`Card text-center ${props.resetPassword.loading && 'disabled'}`}>
-                <Card.Header><h2>Change Password</h2></Card.Header>
+        <>
+            <Card className={`Card text-center ${props.resetPassword?.loading && 'disabled'}`}>
+                <Card.Header><h2>Reset Password</h2></Card.Header>
                 <Card.Body>
                     <Card.Text>
-                        <TextField id="email" label="Email" variant="outlined"
-                            value={email}
-                            name='email'
-                            type='input'
-                            disabled />
                         <TextField id="password" label="Password" variant="outlined"
                             value={password}
                             name='password'
@@ -105,33 +90,23 @@ const ChangePassword = (props) => {
                         disabled={(!password || !confirmPassword || errorMsg.password || errorMsg.confirmPassword)}>
                         Submit</Button>
                 </Card.Body>
+                <ToastContainer />
             </Card>
-            <div className='text-center mt-3'>
-                {props.ResetPassword.loading ? <div className='text-center mt-3 w-50 mx-auto'>
-                    <LinearProgress /> </div> :
-                    props.ResetPassword.passwordChanged ?
-                        <> <h2 > {props.ResetPassword.successMsg} </h2>
-                            <Button
-                                onClick={afterResetHandler}
-                                disabled={!props.ResetPassword.passwordChanged}>Click to proceed</Button></>
-                        : <div className='text-danger'>{props.ResetPassword.errorMsg}</div>}
-            </div>
-        </div>
+           
+        </>
     );
 }
 
 const mapStateToProps = state => {
-    console.log(state);
     return ({
-        ResetPassword: state.ResetPassword,
-        EmployeeData: state.Login
+        ResetPassword: state.ResetPassword
     })
 }
 
 const mapDispatchToProps = dispatch => {
     return ({
-        ChangePassword: ((email, oldPassword, password, confirmPassword, employeeId) => dispatch(changePassword(email, oldPassword, password, confirmPassword, employeeId)))
+        ResetPasswordMethod: ((email, password, confirmPassword, history) => dispatch(resetPassword(email, password, confirmPassword, history)))
     })
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChangePassword);
+export default connect(mapStateToProps, mapDispatchToProps)(ResetPassword);

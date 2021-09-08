@@ -7,10 +7,11 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 
 import './CheckOtp.scss';
-import { checkOTP } from '../../store/Actions/ResetPasswordActions';
+import { checkOTP } from '../../../store/Actions/ResetPasswordActions';
+import { ToastContainer } from 'react-toastify';
 
 const CheckOtp = (props) => {
-
+console.log('check otp file');
     const [otp, setOTP] = useState('');
     const [errorMsg, setErrorMsg] = useState([]);
     const history = useHistory();
@@ -50,14 +51,14 @@ const CheckOtp = (props) => {
 
     const otpCheckHandler = (event) => {
         event.preventDefault();
-        props.CheckOtp(props.resetPassword.email,otp)
+        props.CheckOtp(props.resetPassword.email,otp,history)
     }
 
     const otpPageHandler = () => {
         history.push(`/resetPassword`)
     }
 
-    let clickToProceed = '';
+   /* let clickToProceed = '';
     if (props.resetPassword.loading) {
         clickToProceed = <div className='text-center mt-3 w-50 mx-auto'>
            <LinearProgress /> </div>
@@ -73,12 +74,13 @@ const CheckOtp = (props) => {
     else {
         clickToProceed = <div className='text-center mt-3'>
             <h2 className='text-danger'> {props.resetPassword.errorMsg} </h2>
+            <h2 className='text-danger'> Try Again </h2>
         </div>
-    }
+    }*/
 
     return (
         <>
-            <Card className= {`Card text-center ${props.resetPassword.loading && 'disabled'}`}>
+            <Card className= {`Card text-center ${props.resetPassword?.loading && 'disabled'}`}>
                 <Card.Header><h2>Enter OTP</h2></Card.Header>
                 <Card.Body>
                     <Card.Text>
@@ -93,9 +95,9 @@ const CheckOtp = (props) => {
                         onClick={otpCheckHandler}
                         disabled={(!otp || errorMsg.otp)}>
                         Submit</Button>
+                        <ToastContainer />
                 </Card.Body>
             </Card>
-            {clickToProceed}
         </>
     );
 }
@@ -108,7 +110,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return ({
-        CheckOtp : ((email,otp)=>{dispatch(checkOTP(email,otp))}) 
+        CheckOtp : ((email,otp, history)=>{dispatch(checkOTP(email,otp, history))}) 
     })
 }
 

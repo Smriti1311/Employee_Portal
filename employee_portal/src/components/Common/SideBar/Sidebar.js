@@ -11,6 +11,7 @@ import 'react-pro-sidebar/dist/scss/styles.scss';
 import './SideBar.scss';
 
 function Sidebar(props) {
+    console.log('sidebar');
     const [collapseSideBar, setcollapseSideBar] = useState(true);
     const { path } = useRouteMatch();
     const sideBarRef = useRef();
@@ -51,23 +52,29 @@ function Sidebar(props) {
             </SidebarHeader>
             <SidebarContent >
                 <Menu iconShape="square">
-                    <MenuItem onClick={toggleSideBarHandler} 
-                                icon={<GoDashboard />}>DashBoard</MenuItem>
-                    <MenuItem onClick={toggleSideBarHandler} 
-                                icon={<BsFillPersonFill />} >All Employees</MenuItem>
-                    <SubMenu onClick = {openSideBarHandler} title='My Data' icon={<BsFillPersonFill onClick = {openSideBarHandler} />}>
-                        <MenuItem onClick={collapseSideBarHandler} >My Profile
+                    <MenuItem onClick={toggleSideBarHandler} icon={<GoDashboard />}>
+                        DashBoard
+                    </MenuItem>
+                    <SubMenu onClick={openSideBarHandler} title='My Data' icon={<BsFillPersonFill onClick={openSideBarHandler} />}>
+                        <MenuItem onClick={collapseSideBarHandler} >
+                            My Profile
                             <Link to={`${path}/emp-profile/${id}`} />
                         </MenuItem>
-                        <MenuItem onClick={collapseSideBarHandler}>Time Sheet</MenuItem>
-                        <MenuItem onClick={collapseSideBarHandler}>Team Members</MenuItem>
+                        <MenuItem onClick={collapseSideBarHandler}>
+                            My Time Sheet
+                        </MenuItem>
+                        <MenuItem onClick={collapseSideBarHandler} icon={<HiOutlineDocumentReport />}>
+                            My Team
+                            <Link to={`${path}/direct-reports`} />
+                        </MenuItem>
                     </SubMenu>
-                    <SubMenu onClick = {openSideBarHandler} title='Employment' icon={<GrUserManager />} >
+                    <SubMenu onClick={openSideBarHandler} title='HR' icon={<GrUserManager />} >
                         <MenuItem onClick={collapseSideBarHandler} icon={<BsFillPersonFill />}>Enroll Employee
                             <Link to={`${path}/create-employee`} />
                         </MenuItem>
-                        <MenuItem onClick={collapseSideBarHandler} icon={<HiOutlineDocumentReport />}>Direct Reports
-                            <Link to={`${path}/direct-reports`} />
+                        <MenuItem onClick={toggleSideBarHandler}
+                            icon={<BsFillPersonFill />} >All Employees
+                            <Link to={`${path}/allEmployees/`} />
                         </MenuItem>
                     </SubMenu>
                 </Menu>
