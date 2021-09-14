@@ -2,7 +2,8 @@ import { USERDETAILS, LOGINFAILED } from "../../components/Contants";
 
 const initialState = {
     employeeData : {},
-    error : ''
+    error : '',
+    empLoggedIn : false
 }
 
 const LoginReducer = (state = initialState , action) => {
@@ -11,12 +12,14 @@ const LoginReducer = (state = initialState , action) => {
         return{
             ...state,
             employeeData : action.employeeData,
+            empLoggedIn : true,
             error : ''
         }
     case LOGINFAILED :
         return{
             ...state,
-            error : action.error
+            error : action.error,
+            empLoggedIn : false
         }    
     default :    
         return state;

@@ -27,7 +27,7 @@ export const submit_login = (employeeId, password, history) => dispatch => {
                 const employeeData = res.data;
                 console.log(employeeData);
                 const { token } = employeeData;
-                const { firstLogin, _id } = employeeData.data;
+                const { firstLogin } = employeeData.data;
                 localStorage.setItem('empToken', token);
                 if (firstLogin) {
                     history.push('./changePassword')

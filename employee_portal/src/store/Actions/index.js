@@ -14,6 +14,7 @@ export {
 } from './LoginActions';
 
 export {
-ViewEmployee
-
+ViewEmployee,
+DeleteEmployee,
+EditEmployee
 } from './EmployeeActions'

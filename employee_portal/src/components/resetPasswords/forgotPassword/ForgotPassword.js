@@ -1,11 +1,10 @@
 import { TextField } from '@material-ui/core';
 import { Card, Button } from 'react-bootstrap';
 import React, { useState } from 'react';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import { validate } from 'validate.js';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { generateOTP } from '../../../store/Actions/ResetPasswordActions';
@@ -50,10 +49,6 @@ console.log('forgot password');
     const otpGenerationHandler = (event) => {
         event.preventDefault();
         props.generateOTP(email, history, pathName);
-    }
-
-    const otpPageHandler = () => {
-        history.push(`${pathName}/checkOtp`)
     }
 
     return (

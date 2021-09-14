@@ -1,4 +1,4 @@
-import { TextField, LinearProgress } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { Card, Button } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { validate } from 'validate.js';
@@ -71,10 +71,6 @@ const ChangePassword = (props) => {
     const passwordUpdateHandler = (event) => {
         event.preventDefault();
         props.ChangePassword(email, oldPassword, password, confirmPassword, employeeId, history)
-    }
-
-    const afterResetHandler = () => {
-        history.push('/');
     }
 
     return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router';
+import { Switch, Route, Redirect } from 'react-router';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { useSelector } from 'react-redux';
 
@@ -16,13 +16,17 @@ import './App.scss';
 
 function App() {
   const loading = useSelector(state => state.Loading.loading); 
+  //const isLoggedIn = useSelector(state => state.Login.empLoggedIn);
+  const token = localStorage.getItem('empToken');
+
   return(
     <div className = 'App'>
       {loading && <LinearProgress />}
       <Switch>
         <Route exact path='/' component={LoginPage} />
         <Route path = '/homePage' component = {HomePage} />
-        <Route path={`/emp-profile/:id`} component={EmpProfile} />
+         {token ? <Route path={`/emp-profile/:id`} component={EmpProfile} /> 
+              : <Route path={'/'} component = {LoginPage}  /> }
         <Route exact path={'/forgotPassword'} component={ForgotPassword} />
         <Route path={'/forgotPassword/checkOtp'} component={CheckOtp} />
         <Route path = {'/resetPassword'} component = { ResetPassword} />

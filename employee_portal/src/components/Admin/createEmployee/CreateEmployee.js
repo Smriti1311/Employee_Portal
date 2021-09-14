@@ -9,6 +9,7 @@ import { validate } from 'validate.js';
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 import { baseUrl } from '../../Contants';
+import { useParams } from 'react-router';
 
 const initialEmployee = {
     fname: '',
@@ -30,14 +31,79 @@ const initialEmployee = {
 };
 
 function CreateEmployee(props) {
-    console.log('create employee');
-
     const [employee, setEmployee] = useState(initialEmployee);
-
     const [errorMsgs, setErrorMsgs] = useState([]);
     const [managerList, setManagerList] = useState([]);
     const [disableSubmit, setDisableSubmit] = useState(true);
-    //const [successMsg, setSuccessMsg] = useState('');
+    const empId = useParams();
+    console.log(empId);
+
+    
+    useEffect(() => {
+        console.log('use effect')
+        const url = baseUrl + 'managers';
+        axios.get(url)
+            .then((res) => {
+                console.log('axios');
+                let manager = {};
+                let managersList = [];
+                res.data.map((employee) => {
+                    console.log(employee)
+                    manager = ({
+                        'managerId': employee.employeeId,
+                        'manager_Id' : employee._id,
+                        'managerName': employee.employeeName
+                    });
+                    return managersList.push(manager);
+                });
+                setManagerList(managersList);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }, [])
+
+    console.log('managerList=',managerList)
+    
+    useEffect(()=>{
+        if(empId.id){
+        console.log('edit mode');
+        axios.get(`http://localhost:8080/users/empdetails/${empId.id}`)
+        .then(res => {
+            console.log(res.data.data);
+           const empData = res.data.data;
+           console.log('edit mode=',managerList);
+           const manager = managerList.filter((manager)=>{
+              return  manager.manager_Id === empData.reportingTo[0]._id;
+           })
+           console.log('edit mode=',manager);
+           setEmployee({
+               ...employee,
+               fname : empData.employeeName.split(' ')[0],
+               lname : empData.employeeName.split(' ')[1],
+               etype : empData.employeeType,
+               epayroll: empData.payRollType,
+               ctc: empData.cost,
+               erole: empData.role,
+               designation: empData.designation,
+               rmanager: 'Joginaidu Gopisetti', 
+               doj: empData.joinedOn,
+               status: empData.status,
+               companyEmail: empData.personalEmail,
+               email: empData.personalEmail,
+               mobile1: empData.primaryMobile,
+               mobile2: empData.primaryMobile,
+               dob: '',
+               address: '',               
+           });
+           // dispatch({ type : LOADING_DONE});
+        })
+        .catch ( err => {
+            console.log(err);
+            //dispatch({ type : LOADING_DONE});
+        })
+    }
+    },[empId.id])
 
     const constraints = {
         fname: {
@@ -82,29 +148,6 @@ function CreateEmployee(props) {
 
     }
 
-    useEffect(() => {
-        console.log('use effect')
-        //window.location.reload(true);
-        const url = baseUrl + 'managers';
-        axios.get(url)
-            .then((res) => {
-                console.log('axios');
-                let manager = {};
-                let managersList = [];
-                res.data.map((employee) => {
-                    console.log(employee);
-                    manager = ({
-                        'managerId': employee.employeeId,
-                        'managerName': employee.employeeName
-                    });
-                    return managersList.push(manager);
-                });
-                setManagerList(managersList);
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-    }, [])
 
     const setValueHandler = (event) => {
         const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
@@ -190,8 +233,6 @@ function CreateEmployee(props) {
             .catch((err) => {
                 console.log(err);
             })
-            console.log('after axios');
-            //setSuccessMsg('');
             resetEmployee();
     }
 
@@ -450,7 +491,8 @@ function CreateEmployee(props) {
                         </Grid>
                         <div className='text-center col-sm-10'>
                             <Button variant='contained' color='primary' type='submit' disabled={disableSubmit}>
-                                Create Employee</Button>
+                                {empId.id ? 'Edit Employee' : 'Create Employee'}
+                            </Button>
                             <Button className = 'ml-2' variant='contained' color='secondary' onClick = {resetEmployee}>
                                 Cancel</Button>    
                         </div>

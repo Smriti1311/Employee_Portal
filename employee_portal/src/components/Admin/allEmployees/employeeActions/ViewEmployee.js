@@ -1,9 +1,8 @@
 import { Table } from 'react-bootstrap';
-import { useDispatch, useSelector} from 'react-redux';
+import {  useSelector} from 'react-redux';
 
 function ViewEmployee(props) {
-    console.log('emp profile');
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
     const employeeData = useSelector(state => state.EmployeeData?.employeeData);
 
     return (

@@ -1,0 +1,66 @@
+.Caption {
+    border-radius : 0.25em;
+    text-align : center; 
+    color: purple; 
+    border: 1px solid purple;
+    padding: 0.5em
+}
+
+.Table {
+    margin-top: 1rem;
+  }
+
+.react-bootstrap-table {
+    width: 100%;
+    overflow: scroll;
+    height: 50%;
+    table-layout: auto !important;
+    white-space: nowrap;
+}
+
+.react-bootstrap-table table {
+    table-layout: auto;
+}
+
+.search-label{
+    margin-top: 1rem;
+    margin-right: 1rem;
+    width: 80%;
+    line-height: 1rem;
+}
+
+.btn-default{
+    background-color: #007bff;
+    line-height: 1rem;
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+ .tableHeaderStyle  {
+    background-color : #6c757d;
+    width : 100px;
+    color: #ffffff;
+  }
+
+  .MuiLinearProgress-root{
+      margin-top: 5px;
+      height : 15px;
+      border-radius: 5px;
+  }
+
+  .react-bootstrap-table-page-btns-ul{
+      z-index: 1 !important;
+  }
+
+  .threedots:after {
+    content: "\2807";
+    font-size: 25px;
+  }
+
+  .allEmployeeOuter {
+      margin-bottom: 50px;
+  }
+
+  .page-link { 
+      z-index: 0 !important;
+  }

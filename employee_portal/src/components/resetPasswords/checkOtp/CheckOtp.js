@@ -1,7 +1,6 @@
 import { TextField } from '@material-ui/core';
 import { Card, Button } from 'react-bootstrap';
 import React, { useState } from 'react';
-import { LinearProgress } from '@material-ui/core';
 import { validate } from 'validate.js';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -53,30 +52,6 @@ console.log('check otp file');
         event.preventDefault();
         props.CheckOtp(props.resetPassword.email,otp,history)
     }
-
-    const otpPageHandler = () => {
-        history.push(`/resetPassword`)
-    }
-
-   /* let clickToProceed = '';
-    if (props.resetPassword.loading) {
-        clickToProceed = <div className='text-center mt-3 w-50 mx-auto'>
-           <LinearProgress /> </div>
-    }
-    else if (!props.resetPassword.loading && props.resetPassword.otpVerified) {
-        clickToProceed = <div className='text-center mt-3'>
-            <h2 > {props.resetPassword.successMsg} </h2>
-            <Button
-                onClick={otpPageHandler}
-                disabled={!props.resetPassword.otpVerified}>Click to proceed</Button>
-        </div>
-    }
-    else {
-        clickToProceed = <div className='text-center mt-3'>
-            <h2 className='text-danger'> {props.resetPassword.errorMsg} </h2>
-            <h2 className='text-danger'> Try Again </h2>
-        </div>
-    }*/
 
     return (
         <>
